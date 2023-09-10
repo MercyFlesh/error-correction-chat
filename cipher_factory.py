@@ -26,6 +26,7 @@ class CipherFactory:
 
     @staticmethod
     def _bin_to_str(bin_message):
+        bin_message = bin_message[bin_message.find('1'):]
         bin_message = '0' * (8 - len(bin_message) % 8 if len(bin_message) % 8 != 0 else 0) + bin_message
         bitset = bitarray(bin_message)
         

@@ -2,10 +2,12 @@ import datetime
 import json
 import os
 import socket
+import config
 from cipher_factory import CipherFactory
 from hamming import Hamming
 from ldpc import LDPC
 from rs import RS
+from conv_code import Convolutional
 
 
 class Backend:
@@ -34,10 +36,10 @@ class Backend:
 
     def run_receiving(self, gui_text):
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as udp_socket:
-            udp_socket.bind((self.host, self.udp_port_2))
+            udp_socket.bind((self.host, self.udp_port_1))
             while True:
                 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as tcp_socket:
-                    tcp_socket.bind((self.host, self.tcp_port_2))
+                    tcp_socket.bind((self.host, self.tcp_port_1))
                     tcp_socket.listen(1)
                     conn, tcp_addr = tcp_socket.accept()
                     with conn:
@@ -48,12 +50,14 @@ class Backend:
                                 data, udp_addr = udp_socket.recvfrom(6144)
                                 encode_message = data.decode('utf-8')
                                 if tcp_addr[0] == udp_addr[0] and algorithm_type != '' and encode_message != '':
-                                    if algorithm_type == self.algorithm_types[0]:
+                                    if algorithm_type == config.ALGORITHMS[0]:
                                         decoded_message = CipherFactory.decode(Hamming, encode_message)
-                                    elif algorithm_type == self.algorithm_types[1]:
+                                    elif algorithm_type == config.ALGORITHMS[1]:
                                         decoded_message = CipherFactory.decode(LDPC, encode_message)
-                                    elif algorithm_type == self.algorithm_types[2]:
+                                    elif algorithm_type == config.ALGORITHMS[2]:
                                         decoded_message = CipherFactory.decode(RS, encode_message)
+                                    elif algorithm_type == config.ALGORITHMS[3]:
+                                        decoded_message = CipherFactory.decode(Convolutional, encode_message)
                                     else:
                                         break
     

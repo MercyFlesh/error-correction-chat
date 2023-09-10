@@ -1,12 +1,13 @@
 import threading
+import config
 from backend import Backend
 from hamming import Hamming
 from rs import RS
 from ldpc import LDPC
+from conv_code import Convolutional
 from cipher_factory import CipherFactory
 import customtkinter as ctk
 from CTkMessagebox import CTkMessagebox
-
 
 class GUI:
     def __init__(self):
@@ -63,11 +64,10 @@ class GUI:
         self.text_message.bind('<KeyRelease>', self._encode)
         self.mistake.bind('<KeyRelease>', self._encode)
 
-        self.selected_options = ["Код Хэминга", "LDPC", "Код Рида-Соломона"]
         self.selected_algorithm = ctk.StringVar(self.root)
-        self.selected_algorithm.set(self.selected_options[0])
+        self.selected_algorithm.set(config.ALGORITHMS[0])
 
-        self.algorithm_mode_menu = ctk.CTkOptionMenu(self.root, variable=self.selected_algorithm, values=self.selected_options, command=self._change_algorithm_mode)
+        self.algorithm_mode_menu = ctk.CTkOptionMenu(self.root, variable=self.selected_algorithm, values=config.ALGORITHMS, command=self._change_algorithm_mode)
         self.algorithm_mode_menu.grid(row=6, column=2, columnspan=1, rowspan=1, padx=(5, 10), pady=(5, 5), sticky="wew")
 
         self.send = ctk.CTkButton(self.root, text="Отправить", command=lambda: self._send())
@@ -133,12 +133,14 @@ class GUI:
         mistake = '0' if mistake == '' else mistake
 
         encode_message = ""
-        if selected_alg == self.selected_options[0]:
+        if selected_alg == config.ALGORITHMS[0]:
             encode_message = CipherFactory.encode(Hamming, text, mistake)
-        elif selected_alg == self.selected_options[1]:
+        elif selected_alg == config.ALGORITHMS[1]:
             encode_message = CipherFactory.encode(LDPC, text, mistake)
-        elif selected_alg == self.selected_options[2]:
+        elif selected_alg == config.ALGORITHMS[2]:
             encode_message = CipherFactory.encode(RS, text, mistake)
+        elif selected_alg == config.ALGORITHMS[3]:
+            encode_message = CipherFactory.encode(Convolutional, text, mistake)
 
         self.encode_message.configure(state="normal")
         self.encode_message.delete(0.0, 'end')
