@@ -1,10 +1,5 @@
-# udp_hamming_chat
+# Error correction udp chat
 
-P.S. при декодировании сообщений не обрабатываются пробелы и большинство специальных символов 
+Udp chat with error-correcting coding algorithms.
 
-Запуск в директории проекта:
-
-`python main.py`
-
-
-<img src="https://github.com/ovsyannikovas/udp_hamming_chat/assets/69316878/570c90cb-a8ab-4f3a-93e5-66de1b454091" width="500">
+![ui](https://github.com/MercyFlesh/error-correction-chat/assets/43219252/8925011b-0aac-4cb5-a731-f87259e1d936)
